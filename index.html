@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>My First Grid</title>
+ 
+<link rel="stylesheet" type="text/css" media="screen" href="css/ui-lightness/jquery-ui-1.10.3.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+ 
+<script src="js/jquery-1.9.1.js" type="text/javascript"></script>
+<script src="js/i18n/grid.locale-en.js" type="text/javascript"></script>
+<script src="js/jquery.jqGrid.min.js" type="text/javascript"></script>
+ 
+</head>
+<body>
+
+	<table id="grid"></table>
+	<div id="navigator"></div>
+
+<script type="text/javascript">
+$(function () {
+	var editOptions = {
+        aftersavefunc: function (rowid, response, options) {
+            console.log("Строка " + rowid + " сохранена.");
+			//$("#grid").trigger("reloadGrid");
+        }
+    };
+
+    $("#grid").jqGrid({
+        url: "data.json",
+        datatype: "json",
+        mtype: "GET",
+        colNames: ["#", "Title"],
+        colModel: [
+            { name: "id", width: 100 },
+            { name: "title", width: 400, editable:true, edittype:'text' }
+        ],
+        pager: "#pager",
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        sortname: "invid",
+        sortorder: "desc",
+        viewrecords: true,
+		pager: '#navigator',
+        gridview: true,
+        autoencode: true,
+        caption: "Test inline edit",
+		editurl: "save.php"
+    });
+	jQuery("#grid").jqGrid('navGrid',"#navigator",{edit:false,add:false,del:false});
+	jQuery("#grid").jqGrid('inlineNav',"#navigator", {
+		addParams: { 
+			addRowParams: editOptions
+		},
+		editParams: editOptions
+	});
+});
+</script>
+</body>
+</html>
